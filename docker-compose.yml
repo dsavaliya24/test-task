@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  nestjs-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DB_HOSTNAME=db
+      - DB_PORT=5432
+      - DB_USERNAME=book
+      - DB_PASSWORD=root
+      - DB_NAME=books
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: book
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: books
+      POSTGRES_INITDB_ARGS: --data-checksums
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
